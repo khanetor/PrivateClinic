@@ -1,14 +1,11 @@
 ﻿namespace PrivateClinic.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data;
+    using Microsoft.AspNet.Identity;
+    using PrivateClinic.Models;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
-    using System.Web;
     using System.Web.Mvc;
-    using PrivateClinic.Models;
 
     public class PatientController : Controller
     {
@@ -17,7 +14,8 @@
         // GET: /Patient/
         public ActionResult Index()
         {
-            return View(db.Patients.ToList());
+            var patients = GetPatientsForCurrentUser();
+            return View(patients.ToList());
         }
 
         // GET: /Patient/Details/5
@@ -27,7 +25,9 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Patient patient = db.Patients.Find(id);
+            
+            // Patient patient = db.Patients.Find(id);
+            var patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -48,8 +48,10 @@
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
         {
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                patient.UserId = GetCurrentUserId();
                 db.Patients.Add(patient);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -65,7 +67,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Patient patient = db.Patients.Find(id);
+            var patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -80,8 +82,10 @@
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
         {
+            ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
+                patient.UserId = GetCurrentUserId();
                 db.Entry(patient).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -96,7 +100,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Patient patient = db.Patients.Find(id);
+            Patient patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -109,7 +113,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Patient patient = db.Patients.Find(id);
+            Patient patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
             db.Patients.Remove(patient);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -122,6 +126,21 @@
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        // Get a list of patients that belong to the current user
+        private IQueryable<Patient> GetPatientsForCurrentUser()
+        {
+            var currentUserId = GetCurrentUserId();
+            var patients = db.Patients.Where(p => p.UserId == currentUserId);
+            return patients;
+        }
+
+        // Get the current user id
+        private string GetCurrentUserId()
+        {
+            var currentUserId = User.Identity.GetUserId();
+            return currentUserId;
         }
     }
 }

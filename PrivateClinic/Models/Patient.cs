@@ -12,6 +12,9 @@
         public int ID { get; set; }
 
         [Required]
+        public string UserId { get; set; }
+
+        [Required]
         public string Name { get; set; }
 
         [Required]
@@ -28,6 +31,8 @@
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [DataType(DataType.MultilineText)]
+        [UIHint("PostalAddressTemplate")]
         public string Address { get; set; }
     }
 
