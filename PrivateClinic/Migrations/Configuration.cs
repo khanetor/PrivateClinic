@@ -5,14 +5,14 @@ namespace PrivateClinic.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PrivateClinic.Models.PatientContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<PrivateClinic.DAL.PrivateClinicContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(PrivateClinic.Models.PatientContext context)
+        protected override void Seed(PrivateClinic.DAL.PrivateClinicContext context)
         {
             //  This method will be called after migrating to the latest version.
 

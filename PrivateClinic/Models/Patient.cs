@@ -35,9 +35,4 @@
         [UIHint("PostalAddressTemplate")]
         public string Address { get; set; }
     }
-
-    public class PatientContext : DbContext
-    {
-        public DbSet<Patient> Patients { get; set; }
-    }
 }

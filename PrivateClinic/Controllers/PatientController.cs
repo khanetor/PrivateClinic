@@ -1,6 +1,7 @@
 ﻿namespace PrivateClinic.Controllers
 {
     using Microsoft.AspNet.Identity;
+    using PrivateClinic.DAL;
     using PrivateClinic.Models;
     using System.Data.Entity;
     using System.Linq;
@@ -9,7 +10,7 @@
 
     public class PatientController : Controller
     {
-        private PatientContext db = new PatientContext();
+        private PrivateClinicContext db = new PrivateClinicContext();
 
         // GET: /Patient/
         public ActionResult Index()
