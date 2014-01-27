@@ -1,17 +1,13 @@
 ﻿namespace PrivateClinic.Controllers
 {
-    using Microsoft.AspNet.Identity;
-    using PrivateClinic.DAL;
     using PrivateClinic.Models;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
 
-    public class PatientController : Controller
+    public class PatientController : CommonController
     {
-        private PrivateClinicContext db = new PrivateClinicContext();
-
         // GET: /Patient/
         public ActionResult Index()
         {
@@ -135,13 +131,6 @@
             var currentUserId = GetCurrentUserId();
             var patients = db.Patients.Where(p => p.UserId == currentUserId);
             return patients;
-        }
-
-        // Get the current user id
-        private string GetCurrentUserId()
-        {
-            var currentUserId = User.Identity.GetUserId();
-            return currentUserId;
         }
     }
 }

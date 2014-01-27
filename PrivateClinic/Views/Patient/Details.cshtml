@@ -50,6 +50,14 @@
 			@Html.DisplayFor(model => model.Address)
 		</dd>
 
+        <dt>
+
+        </dt>
+
+        <dd>
+            @Html.ActionLink("Documents", "Index", "PatientDoc", new { patientId = Model.ID }, null)
+        </dd>
+
 	</dl>
 </div>
 <p>

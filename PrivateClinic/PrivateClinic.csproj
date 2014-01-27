@@ -159,8 +159,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PatientController.cs" />
+    <Compile Include="Controllers\PatientDocController.cs" />
     <Compile Include="DAL\PrivateClinicContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -173,10 +175,15 @@
     <Compile Include="Migrations\201312090134402_Add_userid_to_Patient_object.Designer.cs">
       <DependentUpon>201312090134402_Add_userid_to_Patient_object.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401241155183_Add_Patient_Document_model.cs" />
+    <Compile Include="Migrations\201401241155183_Add_Patient_Document_model.Designer.cs">
+      <DependentUpon>201401241155183_Add_Patient_Document_model.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Patient.cs" />
+    <Compile Include="Models\PatientDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -189,6 +196,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\privateclinic - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\privateclinic - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\privateclinic.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -232,7 +241,11 @@
     <Content Include="Views\Patient\Details.cshtml" />
     <Content Include="Views\Patient\Edit.cshtml" />
     <Content Include="Views\Patient\Index.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\PostalAddressTemplate.cshtml" />
+    <Content Include="Views\PatientDoc\Create.cshtml" />
+    <Content Include="Views\PatientDoc\Delete.cshtml" />
+    <Content Include="Views\PatientDoc\Details.cshtml" />
+    <Content Include="Views\PatientDoc\Edit.cshtml" />
+    <Content Include="Views\PatientDoc\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -250,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201312090134402_Add_userid_to_Patient_object.resx">
       <DependentUpon>201312090134402_Add_userid_to_Patient_object.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401241155183_Add_Patient_Document_model.resx">
+      <DependentUpon>201401241155183_Add_Patient_Document_model.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

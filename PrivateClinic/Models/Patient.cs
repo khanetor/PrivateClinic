@@ -3,9 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Web;
 
     public class Patient
     {
@@ -32,7 +29,9 @@
         public string Email { get; set; }
 
         [DataType(DataType.MultilineText)]
-        [UIHint("PostalAddressTemplate")]
         public string Address { get; set; }
+
+        public virtual ICollection<PatientDoc> PatientDocuments { get; set; }
+
     }
 }
