@@ -51,6 +51,9 @@
             @Html.ActionLink("Details", "Details", new { id=item.ID }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ID })
         </td>
+        <td>
+            @Html.ActionLink("History", "Index", "PatientDoc", new { patientId = item.ID }, null)
+        </td>
     </tr>
 }
 
