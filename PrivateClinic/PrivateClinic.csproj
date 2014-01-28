@@ -179,6 +179,10 @@
     <Compile Include="Migrations\201401241155183_Add_Patient_Document_model.Designer.cs">
       <DependentUpon>201401241155183_Add_Patient_Document_model.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401281108268_Add_Symptom_column_for_PatientDoc.cs" />
+    <Compile Include="Migrations\201401281108268_Add_Symptom_column_for_PatientDoc.Designer.cs">
+      <DependentUpon>201401281108268_Add_Symptom_column_for_PatientDoc.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -267,6 +271,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201401241155183_Add_Patient_Document_model.resx">
       <DependentUpon>201401241155183_Add_Patient_Document_model.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401281108268_Add_Symptom_column_for_PatientDoc.resx">
+      <DependentUpon>201401281108268_Add_Symptom_column_for_PatientDoc.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

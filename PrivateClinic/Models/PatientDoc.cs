@@ -20,6 +20,8 @@
 
         public string Diagnosis { get; set; }
 
+        public string Symptom { get; set; }
+
         public string Lab { get; set; }
 
         public string Treatment { get; set; }

@@ -56,7 +56,7 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
+        public async Task<ActionResult> Create([Bind(Include="ID,PatientId,Date,Diagnosis,Symptom,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
@@ -93,7 +93,7 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
+        public async Task<ActionResult> Edit([Bind(Include="ID,PatientId,Date,Diagnosis,Symptom,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
