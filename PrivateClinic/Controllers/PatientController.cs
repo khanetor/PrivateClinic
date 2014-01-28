@@ -2,7 +2,6 @@
 {
     using PrivateClinic.Models;
     using System.Data.Entity;
-    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -124,14 +123,6 @@
                 db.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        // Get a list of patients that belong to the current user
-        private IQueryable<Patient> GetPatientsForCurrentUser()
-        {
-            var currentUserId = GetCurrentUserId();
-            var patients = db.Patients.Where(p => p.UserId == currentUserId);
-            return patients;
         }
     }
 }

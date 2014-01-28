@@ -17,7 +17,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var patientDocs = GetPatientDocsForUser(patientId);
+            var patientDocs = GetPatientDocsForCurrentUser(patientId);
             ViewBag.PatientId = patientId;
             return View(await patientDocs.ToListAsync());
         }
@@ -30,7 +30,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
+            var patientdoc = await GetPatientDocsForCurrentUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             //PatientDoc patientdoc = db.PatientDocuments.Find(id);
             if (patientdoc == null)
             {
@@ -63,7 +63,13 @@
             {
                 patientdoc.UserId = GetCurrentUserId();
                 db.PatientDocuments.Add(patientdoc);
+
+                // Also update the date of last visit
+                var patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == patientdoc.PatientId);
+                patient.DOLV = patientdoc.Date;
+                db.Entry(patient).State = EntityState.Modified;
                 await db.SaveChangesAsync();
+
                 return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
             }
 
@@ -79,7 +85,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
+            var patientdoc = await GetPatientDocsForCurrentUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             if (patientdoc == null)
             {
                 return HttpNotFound();
@@ -114,7 +120,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
+            var patientdoc = await GetPatientDocsForCurrentUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             if (patientdoc == null)
             {
                 return HttpNotFound();
@@ -127,7 +133,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int patientId, int id)
         {
-            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
+            var patientdoc = await GetPatientDocsForCurrentUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             db.PatientDocuments.Remove(patientdoc);
             await db.SaveChangesAsync();
             return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
@@ -142,21 +148,6 @@
             base.Dispose(disposing);
         }
 
-        private IQueryable<PatientDoc> GetPatientDocsForUser(int patientId)
-        {
-            var currentUserId = GetCurrentUserId();
-            var patientDocs = db.PatientDocuments.Where(d => d.UserId == currentUserId && d.PatientId == patientId);
-            return patientDocs;
-        }
-
-        private IQueryable<PatientDoc> GetPatientDocsForUser(int? patientId)
-        {
-            if (patientId == null)
-            {
-                return null;
-            }
-            var pid = (int) patientId;
-            return GetPatientDocsForUser(pid);
-        }
+        
     }
 }

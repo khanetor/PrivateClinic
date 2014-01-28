@@ -31,6 +31,11 @@
         [DataType(DataType.MultilineText)]
         public string Address { get; set; }
 
+        [Display(Name = "Date of last visit")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:MM-dd-yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime DOLV { get; set; }
+
         public virtual ICollection<PatientDoc> PatientDocuments { get; set; }
 
     }
