@@ -25,7 +25,7 @@
         [AllowAnonymous]
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Kha Nguyen";
 
             return View();
         }
