@@ -4,19 +4,20 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     public class PatientController : CommonController
     {
         // GET: /Patient/
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             var patients = GetPatientsForCurrentUser();
-            return View(patients.ToList());
+            return View(await patients.ToListAsync());
         }
 
         // GET: /Patient/Details/5
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -24,7 +25,7 @@
             }
             
             // Patient patient = db.Patients.Find(id);
-            var patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
+            var patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -43,14 +44,14 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
+        public async Task<ActionResult> Create([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 patient.UserId = GetCurrentUserId();
                 db.Patients.Add(patient);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
@@ -58,13 +59,13 @@
         }
 
         // GET: /Patient/Edit/5
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
+            var patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -77,27 +78,27 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
+        public async Task<ActionResult> Edit([Bind(Include="ID,Name,DOB,Phone,Email,Address")] Patient patient)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 patient.UserId = GetCurrentUserId();
                 db.Entry(patient).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(patient);
         }
 
         // GET: /Patient/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Patient patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
+            Patient patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == id);
             if (patient == null)
             {
                 return HttpNotFound();
@@ -108,11 +109,11 @@
         // POST: /Patient/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Patient patient = GetPatientsForCurrentUser().FirstOrDefault(p => p.ID == id);
+            Patient patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == id);
             db.Patients.Remove(patient);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 

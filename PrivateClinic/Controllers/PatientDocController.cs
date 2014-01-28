@@ -1,38 +1,36 @@
 ﻿namespace PrivateClinic.Controllers
 {
-    using PrivateClinic.DAL;
     using PrivateClinic.Models;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     public class PatientDocController : CommonController
     {
         // GET: /PatientDoc/
-        public ActionResult Index(int? patientId)
+        public async Task<ActionResult> Index(int? patientId)
         {
             if (patientId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             
-            var pid = (int)patientId;
-            var patientDocs = GetPatientDocsForUser(pid);
+            var patientDocs = GetPatientDocsForUser(patientId);
             ViewBag.PatientId = patientId;
-            return View(patientDocs.ToList());
+            return View(await patientDocs.ToListAsync());
         }
 
         // GET: /PatientDoc/Details/5
-        public ActionResult Details(int? patientId, int? id)
+        public async Task<ActionResult> Details(int? patientId, int? id)
         {
             if (id == null || patientId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var pid = (int)patientId;
-            var patientdoc = GetPatientDocsForUser(pid).FirstOrDefault(d => d.ID == id);
+            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             //PatientDoc patientdoc = db.PatientDocuments.Find(id);
             if (patientdoc == null)
             {
@@ -58,15 +56,14 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
+        public async Task<ActionResult> Create([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 patientdoc.UserId = GetCurrentUserId();
-                //patientdoc.Patient = db.Patients.Find(patientdoc.PatientId);
                 db.PatientDocuments.Add(patientdoc);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
             }
 
@@ -75,15 +72,14 @@
         }
 
         // GET: /PatientDoc/Edit/5
-        public ActionResult Edit(int? patientId, int? id)
+        public async Task<ActionResult> Edit(int? patientId, int? id)
         {
             if (id == null || patientId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //PatientDoc patientdoc = db.PatientDocuments.Find(id);
-            var pid = (int)patientId;
-            var patientdoc = GetPatientDocsForUser(pid).FirstOrDefault(d => d.ID == id);
+            
+            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             if (patientdoc == null)
             {
                 return HttpNotFound();
@@ -97,27 +93,28 @@
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
+        public async Task<ActionResult> Edit([Bind(Include="ID,PatientId,Date,Diagnosis,Lab,Treatment,Result,Fee")] PatientDoc patientdoc)
         {
             ModelState.Remove("UserId");
             if (ModelState.IsValid)
             {
                 patientdoc.UserId = GetCurrentUserId();
                 db.Entry(patientdoc).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
             }
             return View(patientdoc);
         }
 
         // GET: /PatientDoc/Delete/5
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? patientId, int? id)
         {
-            if (id == null)
+            if (id == null || patientId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PatientDoc patientdoc = db.PatientDocuments.Find(id);
+            
+            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             if (patientdoc == null)
             {
                 return HttpNotFound();
@@ -128,11 +125,11 @@
         // POST: /PatientDoc/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int patientId, int id)
         {
-            PatientDoc patientdoc = db.PatientDocuments.Find(id);
+            var patientdoc = await GetPatientDocsForUser(patientId).FirstOrDefaultAsync(d => d.ID == id);
             db.PatientDocuments.Remove(patientdoc);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
         }
 
@@ -150,6 +147,16 @@
             var currentUserId = GetCurrentUserId();
             var patientDocs = db.PatientDocuments.Where(d => d.UserId == currentUserId && d.PatientId == patientId);
             return patientDocs;
+        }
+
+        private IQueryable<PatientDoc> GetPatientDocsForUser(int? patientId)
+        {
+            if (patientId == null)
+            {
+                return null;
+            }
+            var pid = (int) patientId;
+            return GetPatientDocsForUser(pid);
         }
     }
 }
