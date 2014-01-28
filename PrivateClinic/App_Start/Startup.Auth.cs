@@ -28,9 +28,9 @@
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "1420357104869015",
+               appSecret: "60c31143c17f56f4f29139d50174b999");
 
             app.UseGoogleAuthentication();
         }
