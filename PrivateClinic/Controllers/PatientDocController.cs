@@ -1,6 +1,7 @@
 ﻿namespace PrivateClinic.Controllers
 {
     using PrivateClinic.Models;
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
@@ -63,10 +64,12 @@
             {
                 patientdoc.UserId = GetCurrentUserId();
                 db.PatientDocuments.Add(patientdoc);
+                await db.SaveChangesAsync();
 
                 // Also update the date of last visit
                 var patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == patientdoc.PatientId);
-                patient.DOLV = patientdoc.Date;
+                var date = await GetPatientDocsForCurrentUser(patientdoc.PatientId).MaxAsync(d => (DateTime?)d.Date);
+                patient.DOLV = (DateTime)date;
                 db.Entry(patient).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -107,6 +110,14 @@
                 patientdoc.UserId = GetCurrentUserId();
                 db.Entry(patientdoc).State = EntityState.Modified;
                 await db.SaveChangesAsync();
+
+                // Also update the date of last visit
+                var patient = await GetPatientsForCurrentUser().FirstOrDefaultAsync(p => p.ID == patientdoc.PatientId);
+                var date = await GetPatientDocsForCurrentUser(patientdoc.PatientId).MaxAsync(d => (DateTime?)d.Date);
+                patient.DOLV = (DateTime)date;
+                db.Entry(patient).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+
                 return RedirectToAction("Index", new { patientId = patientdoc.PatientId });
             }
             return View(patientdoc);
